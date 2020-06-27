@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'surname', 'email', 'password', 'role_id', 'ship_id', 'rank_id'
     ];
 
     /**
@@ -27,6 +27,22 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function rank()
+    {
+        return $this->hasOne(Rank::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ship()
+    {
+        return $this->hasOne(Ship::class);
+    }
 
     /**
      * The attributes that should be cast to native types.
