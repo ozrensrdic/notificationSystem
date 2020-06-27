@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-//    /**
-//     * A role may be given various permissions.
-//     *
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function users()
-//    {
-//        return $this->belongsToMany(User::class);
-//    }
+    const ADMINISTRATOR = 'administrator';
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

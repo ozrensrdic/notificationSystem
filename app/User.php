@@ -45,6 +45,25 @@ class User extends Authenticatable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function role()
+    {
+        return $this->hasOne(Role::class);
+    }
+
+    /**
+     * Determine if the user has the given role.
+     *
+     * @param  mixed $role
+     * @return boolean
+     */
+    public function hasRole($role)
+    {
+        return $this->role_id === $role;
+    }
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
