@@ -72,6 +72,7 @@ class InitializeAdmin extends Command
         }
 
         $details['password'] = bcrypt($details['password']);
+        $details['email_verified_at'] = now();
 
         return $details;
     }
