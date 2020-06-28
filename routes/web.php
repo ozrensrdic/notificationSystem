@@ -12,17 +12,15 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::group([
     'middleware' => [ 'auth', 'role:administrator' ]
 ], function () {
-    Route::get('/home', 'HomeController@index')->name('home');
-
     Route::resource('ship', 'ShipController');
     Route::resource('rank', 'RankController');
-//    Route::resource('rank', 'UserController');
+    Route::resource('user', 'UserController');
 });
 
 Auth::routes();
