@@ -63,13 +63,8 @@ class InitializeAdmin extends Command
         $details['password'] = $this->secret('Password');
         $details['confirm_password'] = $this->secret('Confirm password');
         $details['role_id'] = 'administrator';
-        $valid = $this->isValidPassword($details['password'], $details['confirm_password'])
-        ? 'same'
-        : 'not';
 
         while (! $this->isValidPassword($details['password'], $details['confirm_password'])) {
-
-            $this->error($valid .' pass ' . $details['password'] . ' conf ' . $details['confirm_password']);
             $this->error('Password must be at least 3 characters long and passwords must match.');
 
             $details['password'] = $this->secret('Password');
