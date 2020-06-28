@@ -14,3 +14,16 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group([
+    'middleware' => [ 'auth', 'role:administrator' ]
+], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::resource('ship', 'ShipController');
+    Route::resource('rank', 'RankController');
+//    Route::resource('rank', 'UserController');
+});
+
+Auth::routes();
+

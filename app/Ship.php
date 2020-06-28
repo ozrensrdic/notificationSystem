@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ship extends Model
 {
+    protected $fillable = [
+        'serial_number', 'name', 'image'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
