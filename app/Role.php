@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     const ADMINISTRATOR = 'administrator';
+    const CREW_MEMBER = 'crew_member';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

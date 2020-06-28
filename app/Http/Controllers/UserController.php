@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Rank;
+use App\Role;
 use App\Ship;
+use App\User;
 use Illuminate\Http\Request;
 
-class ShipController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +17,9 @@ class ShipController extends Controller
      */
     public function index()
     {
-        $ships = Ship::all();
+        $users = User::where('role_id','!=', Role::ADMINISTRATOR)->get();
 
-        return view('ship.preview', compact('ships'));
+        return view('user.preview', compact('users'));
     }
 
     /**
@@ -26,40 +29,42 @@ class ShipController extends Controller
      */
     public function create()
     {
-        return view('ship.create');
+        $ships = Ship::all();
+        $ranks = Rank::all();
+
+        return view('user.create', compact('ships', 'ranks'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Ship $ship
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Ship $ship)
+    public function store(Request $request, User $user)
     {
-        $shipData = request()->validate([
+        $userData = request()->validate([
             'name' => ['required'],
-            'serial_number' => ['required', 'alpha_dash', 'size:8', 'unique:ships'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'surname' => ['required'],
+            'email' => ['required', 'email'],
+            'serial_number' => 'required',
+            'rank_id' => 'required',
         ]);
 
-        $shipData['image'] = request()->image->getClientOriginalName();
+        $userData['role_id'] = Role::CREW_MEMBER;
 
-        request()->image->move(public_path('images'), request()->image->getClientOriginalName());
+        $user->create($userData);
 
-        $ship->create($shipData);
-
-        return redirect()->route('ship.index')->withSuccess('Ship saved successfully.');
+        return redirect()->route('user.index')->withSuccess('User saved successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Ship  $ship
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Ship $ship)
+    public function show(User $user)
     {
         //TODO
     }
@@ -67,10 +72,10 @@ class ShipController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Ship  $ship
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Ship $ship)
+    public function edit(User $user)
     {
         //TODO
     }
@@ -79,10 +84,10 @@ class ShipController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Ship  $ship
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Ship $ship)
+    public function update(Request $request, User $user)
     {
         //TODO
     }
@@ -90,10 +95,10 @@ class ShipController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Ship  $ship
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ship $ship)
+    public function destroy(User $user)
     {
         //TODO
     }
