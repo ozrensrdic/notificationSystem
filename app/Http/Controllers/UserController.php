@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewUserNotification;
 use App\Rank;
 use App\Role;
 use App\Ship;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -46,14 +48,16 @@ class UserController extends Controller
         $userData = request()->validate([
             'name' => ['required'],
             'surname' => ['required'],
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'unique:users'],
             'serial_number' => 'required',
             'rank_id' => 'required',
         ]);
 
         $userData['role_id'] = Role::CREW_MEMBER;
+        
+        $newUser = $user->create($userData);
 
-        $user->create($userData);
+        $newUser->sendEmailVerificationNotification();
 
         return redirect()->route('user.index')->withSuccess('User saved successfully.');
     }
