@@ -32,11 +32,15 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-link"><a href="{{ route('user.index')}}">Users</a></li>
-                        <li class="nav-link"><a href="{{ route('rank.index')}}">Ranks</a></li>
-                        <li class="nav-link"><a href="{{ route('ship.index')}}">Ships</a></li>
-                    </ul>
+                    @guest
+                    @else
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-link"><a href="{{ route('notification.index')}}">Notifications</a></li>
+                            <li class="nav-link"><a href="{{ route('user.index')}}">Users</a></li>
+                            <li class="nav-link"><a href="{{ route('rank.index')}}">Ranks</a></li>
+                            <li class="nav-link"><a href="{{ route('ship.index')}}">Ships</a></li>
+                        </ul>
+                    @endguest
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -45,11 +49,6 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

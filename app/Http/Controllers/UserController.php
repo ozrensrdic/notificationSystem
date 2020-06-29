@@ -54,7 +54,7 @@ class UserController extends Controller
         ]);
 
         $userData['role_id'] = Role::CREW_MEMBER;
-        
+
         $newUser = $user->create($userData);
 
         $newUser->sendEmailVerificationNotification();

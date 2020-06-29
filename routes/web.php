@@ -21,9 +21,17 @@ Route::get('/', function () {
 });
 
 Route::group([
-    'middleware' => [ 'auth', 'verified', 'role:administrator' ]
+    'middleware' => [ 'auth', 'verified' ]
 ], function () {
-    Route::resource('ship', 'ShipController');
-    Route::resource('rank', 'RankController');
-    Route::resource('user', 'UserController');
+
+    Route::resource('notification', 'NotificationController');
+
+    Route::group([
+        'role:administrator'
+    ], function () {
+        Route::resource('ship', 'ShipController');
+        Route::resource('rank', 'RankController');
+        Route::resource('user', 'UserController');
+    });
+
 });
