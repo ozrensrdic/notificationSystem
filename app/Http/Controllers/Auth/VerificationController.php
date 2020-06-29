@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
@@ -25,7 +29,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/password/set';
 
     /**
      * Create a new controller instance.
@@ -34,8 +38,31 @@ class VerificationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['verify','resend']);
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+    }
+
+    public function verify(Request $request, User $user)
+    {
+        $verifiedUser = $user->where('email', decrypt($request->confirmation))->first();
+
+        if (! hash_equals((string) $request->route('id'), (string) $verifiedUser->getKey())) {
+            throw new AuthorizationException;
+        }
+
+        if (! hash_equals((string) $request->route('hash'), sha1($verifiedUser->getEmailForVerification()))) {
+            throw new AuthorizationException;
+        }
+
+        if ($verifiedUser->hasVerifiedEmail()) {
+            return redirect($this->redirectPath());
+        }
+
+        if ($verifiedUser->markEmailAsVerified()) {
+            event(new Verified($verifiedUser));
+        }
+
+        return redirect()->route('password.set', ['email' => $verifiedUser->email]);
     }
 }
