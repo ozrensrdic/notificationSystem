@@ -17,18 +17,21 @@ Route::post('password/set/email/{email}', 'Auth\SetPasswordController@create')->
 Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
-    return view('home');
+    return view('/');
 });
 
 Route::group([
     'middleware' => [ 'auth', 'verified' ]
 ], function () {
 
-    Route::resource('notification', 'NotificationController');
+    Route::get('notification', 'NotificationController@index')->name('notification.index');
 
     Route::group([
-        'role:administrator'
+        'middleware' => [ 'role:administrator' ]
     ], function () {
+        Route::get('notification/create', 'NotificationController@create')->name('notification.create');
+        Route::post('notification.store', 'NotificationController@store')->name('notification.store');
+
         Route::resource('ship', 'ShipController');
         Route::resource('rank', 'RankController');
         Route::resource('user', 'UserController');
