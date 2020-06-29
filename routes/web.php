@@ -11,17 +11,19 @@
 |
 */
 
+Route::get('password/set/email/{email}', 'Auth\SetPasswordController@index')->name('password.set');
+Route::post('password/set/email/{email}', 'Auth\SetPasswordController@create')->name('password.create');
+
+Auth::routes(['verify' => true]);
+
 Route::get('/', function () {
     return view('home');
 });
 
 Route::group([
-    'middleware' => [ 'auth', 'role:administrator' ]
+    'middleware' => [ 'auth', 'verified', 'role:administrator' ]
 ], function () {
     Route::resource('ship', 'ShipController');
     Route::resource('rank', 'RankController');
     Route::resource('user', 'UserController');
 });
-
-Auth::routes();
-
