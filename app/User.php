@@ -39,12 +39,14 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyEmail);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function notifications()
+    public function isAdmin()
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasRole(Role::ADMINISTRATOR);
+    }
+
+    public function isCrewMember()
+    {
+        return $this->hasRole(Role::CREW_MEMBER);
     }
 
     /**
