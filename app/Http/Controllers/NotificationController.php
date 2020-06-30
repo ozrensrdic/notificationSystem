@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Notification;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CrewMemberInfo;
 use App\Rank;
-use App\Role;
+use App\User;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -16,11 +17,7 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notifications = Notification::where('rank_id', auth()->user()->rank_id)->get();
-
-        if (auth()->user()->role_id === Role::ADMINISTRATOR) {
-            $notifications = Notification::all();
-        }
+        $notifications = auth()->user()->notifications->where('type', CrewMemberInfo::class)->all();
 
         return view('notification.preview', compact('notifications'));
     }
@@ -44,7 +41,7 @@ class NotificationController extends Controller
      * @param  Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Notification $notification)
+    public function store(Request $request)
     {
         $notificationData = request()->validate([
             'content' => ['required'],
@@ -53,7 +50,8 @@ class NotificationController extends Controller
 
         $notificationData['author_id'] = auth()->user()->id;
 
-        $notification->create($notificationData);
+        $users = User::where('rank_id', $notificationData['rank_id'])->get();
+        Notification::send($users, new CrewMemberInfo($notificationData));
 
         return redirect()->route('notification.index')->withSuccess('Notification saved.');
     }
@@ -64,9 +62,15 @@ class NotificationController extends Controller
      * @param  \App\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function show(Notification $notification)
+    public function seen(Request $request, Notification $notification)
     {
-        //
+        $notification = auth()->user()->notifications->find($request->notification);
+
+        if($notification) {
+            $notification->markAsRead();
+        }
+
+        return redirect()->back();
     }
 
     /**
