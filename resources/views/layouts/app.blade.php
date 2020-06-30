@@ -36,9 +36,11 @@
                     @else
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-link"><a href="{{ route('notification.index')}}">Notifications</a></li>
-                            <li class="nav-link"><a href="{{ route('user.index')}}">Users</a></li>
-                            <li class="nav-link"><a href="{{ route('rank.index')}}">Ranks</a></li>
-                            <li class="nav-link"><a href="{{ route('ship.index')}}">Ships</a></li>
+                            @if(auth()->user()->isAdmin())
+                                <li class="nav-link"><a href="{{ route('user.index')}}">Users</a></li>
+                                <li class="nav-link"><a href="{{ route('rank.index')}}">Ranks</a></li>
+                                <li class="nav-link"><a href="{{ route('ship.index')}}">Ships</a></li>
+                            @endif
                         </ul>
                     @endguest
 

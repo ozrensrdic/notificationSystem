@@ -17,7 +17,7 @@ Route::post('password/set/email/{email}', 'Auth\SetPasswordController@create')->
 Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
-    return view('/');
+    return view('/home');
 });
 
 Route::group([
@@ -25,6 +25,7 @@ Route::group([
 ], function () {
 
     Route::get('notification', 'NotificationController@index')->name('notification.index');
+    Route::post('notification/seen', 'NotificationController@seen')->name('notification.seen');
 
     Route::group([
         'middleware' => [ 'role:administrator' ]
